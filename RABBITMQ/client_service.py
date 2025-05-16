@@ -21,6 +21,7 @@ start_time = time.time()
 
 # Publicamos los insultos
 for i in range(NUM_INSULTOS):
+    
     insulto = f"Insulto #{i+1}..."
     channel.basic_publish(
         exchange='',
@@ -43,7 +44,13 @@ def callback(ch, method, properties, body):
     if received == NUM_INSULTOS:
         # Si todos los insultos fueron procesados, calculamos el tiempo total
         total_time = time.time() - start_time
+        average_capacity = NUM_INSULTOS / total_time
+        average_msgprocessing = total_time / NUM_INSULTOS  # Tiempo promedio de procesamiento por mensaje
+
         print(f"[✓] Todos los insultos han sido procesados en {total_time:.2f} segundos.")
+        print(f"[📈] Capacidad promedio de procesamiento: {average_capacity:.2f} mensajes/segundo")
+        print(f"[⏱️] Tiempo promedio de procesamiento por mensaje: {average_msgprocessing:.4f} segundos")
+
 
         # Guardamos los resultados en un archivo CSV
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")

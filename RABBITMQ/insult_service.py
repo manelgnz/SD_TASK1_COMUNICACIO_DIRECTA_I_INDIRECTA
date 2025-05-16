@@ -1,3 +1,4 @@
+
 import pika
 import random
 import time
@@ -46,6 +47,7 @@ broadcaster_thread.start()
 
 # Callback que maneja los insultos que llegan a la cola
 def callback(ch, method, properties, body):
+    
     insult = body.decode()
     
     if insult not in insults:

@@ -1,5 +1,4 @@
 import pika
-import random
 import time
 
 INSULTS = {
@@ -7,41 +6,48 @@ INSULTS = {
     "mal educat", "bàrbar", "malparit", "ruc", "dropo"
 }
 
-# Conexión a RabbitMQ
+start_time = None
 connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
 channel = connection.channel()
 
-# Cola donde recibimos insultos
 channel.queue_declare(queue='filtro_insultos', durable=True)
-
-# Cola para enviar notificaciones de finalización al cliente
 channel.queue_declare(queue='done_queue', durable=True)
 
-# Callback que maneja los insultos que llegan a la cola
 def callback(ch, method, properties, body):
+    global start_time
+
     mensaje = body.decode()
-    
+
+    if mensaje == "FIN":
+        end_time = time.time()
+        total = end_time - start_time
+        print(f"\n✅ Todos los mensajes procesados.")
+        print(f"⏱️ Tiempo total (worker interno): {total:.4f} segundos")
+
+        # Enviar confirmación final al cliente
+        ch.basic_publish(
+            exchange='',
+            routing_key='done_queue',
+            body="DONE"
+        )
+
+        ch.basic_ack(delivery_tag=method.delivery_tag)
+        ch.stop_consuming()
+        return
+
+    if start_time is None:
+        start_time = time.time()
+
     if mensaje in INSULTS:
         print(f"[FILTRADO] Insulto detectado: {mensaje}")
     else:
         print(f"[OK] Mensaje limpio: {mensaje}")
 
-    # Confirmamos que procesamos el mensaje
     ch.basic_ack(delivery_tag=method.delivery_tag)
 
-    # Enviamos una notificación al cliente sobre el procesamiento
-    response = f"Insulto '{mensaje}' procesado"
-    ch.basic_publish(
-        exchange='',
-        routing_key='done_queue',  # Cola donde el cliente espera la confirmación
-        body=response,
-        properties=pika.BasicProperties(
-            correlation_id=properties.correlation_id  # Identificador de correlación
-        )
-    )
-
-# Consumir los insultos que llegan a la cola
 channel.basic_consume(queue='filtro_insultos', on_message_callback=callback)
-
-print('[*] Esperando insultos...')
+print('[*] Esperando mensajes...')
 channel.start_consuming()
+
+channel.close()
+connection.close()

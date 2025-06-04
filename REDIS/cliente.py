@@ -4,7 +4,7 @@ import threading
 
 client = redis.Redis(host='localhost', port=6379, db=0)
 
-NUM_INSULTS = 5000
+NUM_INSULTS = 50000
 queue_name = "task_queue"
 processed_list = "insultList"
 

@@ -56,7 +56,7 @@ def insult_broadcaster():
 
 # Inici principal
 if __name__ == "__main__":
-    num_workers = 2
+    num_workers = 1
 
     print(f"Inicialitzant {num_workers} workers i un broadcaster...")
 

@@ -1,1 +1,6 @@
 Nombre de workers,Nombre de peticions,Temps total (s)
+1,5000,7.162
+1,5000,7.29
+1,5000,7.293
+1,5000,7.272
+1,50000,26.16

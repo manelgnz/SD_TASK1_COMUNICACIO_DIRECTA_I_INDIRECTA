@@ -5,7 +5,7 @@ import sys
 import csv
 import os
 
-NUM_PETICIONS = 30000
+NUM_PETICIONS = 50000
 CSV_FILENAME = "resultats_test.csv"
 
 @Pyro4.expose

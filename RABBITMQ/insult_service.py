@@ -80,6 +80,7 @@ def callback(ch, method, properties, body):
         print(f"[Worker] El insulto ya existe: {insult}")
 
     total_insults += 1
+    time.sleep(0.05)  # <--- AÑADIDO: simula procesamiento de 50ms por insulto
     ch.basic_ack(delivery_tag=method.delivery_tag)
 
 # Iniciar consumo

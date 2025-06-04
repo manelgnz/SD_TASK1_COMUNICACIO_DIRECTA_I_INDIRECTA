@@ -12,7 +12,7 @@ service_urls = [
     "http://localhost:8002"
 ]
 
-num_peticions_totals = 30000
+num_peticions_totals = 20
 num_processes = len(service_urls)
 CSV_FILENAME = "resultats_test.csv"
 

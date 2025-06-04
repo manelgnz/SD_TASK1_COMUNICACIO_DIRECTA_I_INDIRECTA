@@ -6,7 +6,7 @@ INSULTS = {
     "idiota", "tonto", "imbècil", "burro", "cap de suro",
     "mal educat", "bàrbar", "malparit", "ruc", "dropo"
 }
-NUM_MENSAJES = 20000
+NUM_MENSAJES = 100000
 
 connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
 channel = connection.channel()
